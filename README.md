@@ -1,6 +1,6 @@
 # LookatBooks 看看账
 
-AI 驱动的中国小企业记账工具 —— 可被 coding agent（OpenCode / Claude Code / Cursor 等）通过 MCP 调用、并带只读 Web 查看界面的记账服务。
+AI 驱动的中国小企业记账工具 —— **内置全功能 Web 记账界面**（建账→记账→报表→报税全流程，无需任何 AI 知识），也可被 coding agent 通过 MCP 调用，或用**独创的离线 LLM 桥接模式**（复制 prompt 到豆包/DeepSeek 等免费大模型网页版，无需 API key）。
 
 > 📜 **本仓库为 lookatBooks 的发布渠道**,含**二进制下载** + **用户文档** + **Issue 跟踪**。源代码闭源,详见 [EULA.md](EULA.md)。
 >
@@ -15,6 +15,19 @@ AI 驱动的中国小企业记账工具 —— 可被 coding agent（OpenCode / 
 > 🎁 **开发期福利**：报税文件导出（`filing` 命令）需激活码。**开发期间任何用户都可以发邮件申请免费激活码**，不收取任何费用。邮件：`lookatmedia@163.com`（申请时请简述使用场景，开发期 100% 通过）。
 >
 > 📜 License 与免责条款详见 [LICENSE](LICENSE) 与 [EULA.md](EULA.md)。
+
+---
+
+## 📸 界面预览
+
+**月度记账面板** — 5 步向导(上传 → AI 识别 → 体检 → 登账 → 报表)+ 凭证卡片:
+![月度记账面板](docs/screenshots/month-dashboard.png)
+
+**凭证中心** — 全局凭证管理,支持审核 / 红字冲销 / 状态筛选:
+![凭证中心](docs/screenshots/voucher-list.png)
+
+**资产负债表** — 三大报表之一,自动试算平衡 + 未结转预警:
+![资产负债表](docs/screenshots/balance-sheet.png)
 
 ---
 
@@ -85,14 +98,30 @@ Get-FileHash lookatbooks.exe -Algorithm SHA256   # Windows PowerShell
 
 ## 使用
 
-### Web UI（推荐,普通用户）
+### Web UI（推荐 · 全功能 · 无需 AI 知识）
 
-双击桌面快捷方式(Windows)或 Applications 里的 lookatbooks(macOS),或命令行启动:
+双击桌面快捷方式（Windows）或 Applications 里的 lookatbooks（macOS），或命令行启动：
 ```bash
 lookatbooks ui my.easybook     # 启动原生窗口(默认 pywebview, 单窗口关窗=退出)
 lookatbooks ui my.easybook --browser   # 回退系统浏览器(旧行为, 双窗口)
 ```
-窗口里走完 5 步月度向导:**上传单据 → AI 识别+审核 → 体检 → 登账+期末结转 → 出报表/报税**。导航栏「凭证」入口提供全局凭证管理（手动新增/审核/红字冲销）。
+窗口里走完 5 步月度向导：**上传单据 → AI 识别+审核 → 体检 → 登账+期末结转 → 出报表/报税**。
+
+> **Web UI 是独立的全功能记账软件**，不依赖 MCP 也不依赖外部 AI API。所有操作（建账 / 单据导入 / 凭证审核 / 登账 / 期末结转 / 资产管理 / 银行对账 / 报表 / 报税导出）都在 Web UI 内完成。
+>
+> 导航栏「凭证」入口提供全局凭证管理（手动新增 / 审核 / 红字冲销）。
+
+### 🧠 离线 LLM 桥接（独创模式 · 无需 API key）
+
+没有 OpenAI / Claude API key？**照样用 AI 记账。**
+
+lookatBooks 首创「人工 LLM 桥接」模式，把 AI 记账能力从「需要付费 API」降门槛到「任意免费大模型都能用」：
+
+1. 在 Web UI 点「**导出 prompt**」→ 复制到 [豆包](https://doubao.com) / [DeepSeek](https://chat.deepseek.com) / [Kimi](https://kimi.moonshot.cn) 等免费大模型网页版
+2. 大模型返回 JSON → 粘回 Web UI「**导入**」
+3. 凭证自动生成，和有 API key 的效果一样
+
+> 为什么这么做？很多小企业主 / 代理记账员没有 API key（也不会申请），但都会用网页版大模型聊天。lookatBooks 把「AI 记账」拆成「导出问题 → 大模型回答 → 导入答案」三步，让免费大模型也能当记账 AI 用。
 
 ### CLI（进阶,脚本/批量）
 
@@ -123,9 +152,9 @@ lookatbooks license-status                # 查激活状态
 
 > CLI 定位:会计师/IT 做**批量操作 / 修账恢复 / 无头脚本**用。普通用户走 Web UI, agent 走 MCP。
 
-### MCP（给你的 AI 助手用）
+### MCP（给你的 AI 助手用 · 第三种入口）
 
-让 AI 工具自动调用记账功能 —— 在 Web UI 帮助页(`/help`)复制 prompt 给你的 AI 助手,Ta 会自动跑 `npx add-mcp` 一键配置（支持 Claude Code / Cursor / VS Code / Codex 等 16 个主流 agent）,或用 prompt 内的原始字段自适配其他 agent。
+如果你用 Claude Code / Cursor / VS Code / Codex 等 coding agent，可以让 agent 通过 MCP 直接调用记账功能（54 个工具，覆盖建账到报税全流程）。
 
 注册后对 agent 说:"用 lookatbooks 帮我把 2026-06 的银行流水记成账,看看资产负债表"。
 
