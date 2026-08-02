@@ -2,6 +2,10 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.20.0] — 2026-08-02
+
+公开仓 lookatbooks-app 上线(CI 接管双仓构建/同步, 用户从公开仓下载) + CLI 加 void/reopen 恢复命令(补齐修账兜底) + CLI 定位降级为批量/恢复/无头工具(不再镜像 MCP 全功能)
+
 ## [0.19.1] — 2026-08-02
 
 UX 修复: 初次进入 setup 后能从 nav 进帮助页 + onboarding prompt 框固定高度(max-h-48)可内部滚动 + /help 返回链接在无账套时显式指向 /setup 并改 label 为 '返回建账'

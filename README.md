@@ -119,7 +119,9 @@ lookatbooks activate --code <激活码>      # 激活报税导出
 lookatbooks license-status                # 查激活状态
 ```
 
-完整 28 个 CLI 命令的详细说明,运行 `lookatbooks`(无参数)查看内置帮助。
+完整命令参考见 `docs/usage/cli-reference.md`(30 个命令, 按场景分组),或运行 `lookatbooks`(无参数)查看内置帮助。
+
+> CLI 定位:会计师/IT 做**批量操作 / 修账恢复 / 无头脚本**用。普通用户走 Web UI, agent 走 MCP。
 
 ### MCP（给你的 AI 助手用）
 
