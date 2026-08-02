@@ -1,0 +1,121 @@
+---
+name: Bug 报告
+about: 报告 lookatBooks 的 bug, 帮我们改进
+title: "[BUG] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢报告 bug! 请尽量填全以下信息, 能极大加快定位速度。
+        
+        📌 **报 bug 前**:
+        - 先搜 [已有 Issues](https://github.com/Kaiji-Z/lookatbooks-app/issues?q=is%3Aissue) 看是否已报告
+        - 数据无价 —— 报 bug 前请先备份账套文件(`.easybook`)
+
+  - type: input
+    id: version
+    attributes:
+      label: lookatBooks 版本
+      description: 在"帮助 → 关于"或运行 `lookatbooks --version` 查看
+      placeholder: "例: 0.19.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: 操作系统
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows 其他(请在描述里说明版本)
+        - macOS 15 (Sequoia)
+        - macOS 14 (Sonoma)
+        - macOS 13 (Ventura)
+        - macOS 其他(请在描述里说明版本)
+        - Linux(请在描述里说明发行版)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: 安装方式
+      options:
+        - Windows setup.exe(安装版)
+        - Windows 单文件 exe(绿色版)
+        - macOS .dmg
+        - pip install
+        - 其他(请在描述里说明)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: usage-mode
+    attributes:
+      label: 使用方式
+      options:
+        - Web UI(浏览器/原生窗口)
+        - CLI(命令行)
+        - MCP(给 AI 助手调用)
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么
+      description: 简洁描述 bug 现象。截图或录屏更好(直接拖到此处上传)
+      placeholder: "例: 在月度记账页上传 bank.xlsx 后, 页面卡在 'AI 识别中' 一直转圈"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期应该发生什么
+      placeholder: "例: 应该显示识别出的交易列表, 让我审核"
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: 复现步骤
+      description: 1, 2, 3... 列出能稳定重现问题的操作步骤
+      placeholder: |
+        1. 打开 lookatbooks ui my.easybook
+        2. 进入 2026-06 月度记账
+        3. 点击"上传单据", 选 bank.xlsx
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 错误日志 / 截图
+      description: |
+        如果有错误提示框, 把文字复制到这里(截图也行)。
+        日志文件位置: `<账套同目录>/<账套名>.audit/YYYY-MM-DD.log`
+        Web 控制台(F12 → Console)的报错也贴一下。
+
+  - type: textarea
+    id: data
+    attributes:
+      label: 单据样本(可选, 极大加快定位)
+      description: |
+        如果是单据识别/凭证生成问题, 请附上**脱敏后**的原始单据(银行流水/发票 XML 等)。
+        ⚠️ 请务必先脱敏:擦掉真实金额/对方账号/身份证号,只保留格式结构和触发 bug 的最小数据。
+        我们承诺样本仅用于复现 bug, 不会被分享或用于其他目的。
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 确认
+      options:
+        - label: 我已搜过现有 Issues, 确认这是新 bug
+          required: true
+        - label: 我已脱敏(如附了单据样本)
+          required: false
