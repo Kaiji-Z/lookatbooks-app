@@ -2,6 +2,14 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.20.1] — 2026-08-06
+
+修复银行对账余额提取回退路径污染调节表的账务风险(H1, 0.18.0 引入): _extract_bank_ending_balance 找不到'期末余额'关键词且未手动传参时, 早期版本回退到'假设期初=0 的净额'冒充期末余额, 把整个期初余额变成虚假未达账项, 调节差异 = 期初余额(大额错报)。改为抛 ValueError 要求手动传 + 补回归测试。
+
+补齐对账工具测试覆盖(被问'覆盖够吗'后实测 --cov-branch 发现): 支出方向未达账项分类(bank_payment_unrecorded / book_payment_unbanked)0 测试 + 非银行流水文件早退分支 0 测试 + 去重逻辑死代码(自己引入的阈值 bug, n>35 时头部尾部永不重叠)。修死代码 + 补 3 个测试, 行覆盖 89%→95%, 分支覆盖→91%。
+
+附带: AGENTS.md §1.4 同步 reopen_period 实际删除的凭证标记(加 profit_distribute, 防双重分配); alipay 测试在 Windows 上 GBK 编码失败修复(与本次无关, 顺手)。
+
 ## [0.20.0] — 2026-08-02
 
 公开仓 lookatbooks-app 上线(CI 接管双仓构建/同步, 用户从公开仓下载) + CLI 加 void/reopen 恢复命令(补齐修账兜底) + CLI 定位降级为批量/恢复/无头工具(不再镜像 MCP 全功能)
