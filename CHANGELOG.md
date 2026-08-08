@@ -2,6 +2,17 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.20.2] — 2026-08-08
+
+修复 regression.sh 预先存在的 flag=on 失败(VERIFICATION.md §5/§7 合规):
+
+test_invalid_confidence_fallback_to_half 用 _bank_txn 默认 direction=OUT, 但测试凭证是'借银行/贷收入'(收到钱分录), 两者矛盾。flag=off 无所谓, flag=on 时 supervisor 正确识别'资金方向不符'降为 PENDING, 导致 regression.sh 报回归。修复: _bank_txn 加 direction 可选参数, 测试传 IN 匹配分录语义。
+
+这是本仓库 regression.sh 首次全绿(d7aad96 及之前都因这个测试失败)。
+ VERIFICATION §5 顺序(先验收标准再改代码) + flag on/off 对照收敛。
+
+不涉及运行时行为变化(纯测试修复), 用户侧 v0.20.1 功能不受影响。
+
 ## [0.20.1] — 2026-08-06
 
 修复银行对账余额提取回退路径污染调节表的账务风险(H1, 0.18.0 引入): _extract_bank_ending_balance 找不到'期末余额'关键词且未手动传参时, 早期版本回退到'假设期初=0 的净额'冒充期末余额, 把整个期初余额变成虚假未达账项, 调节差异 = 期初余额(大额错报)。改为抛 ValueError 要求手动传 + 补回归测试。
