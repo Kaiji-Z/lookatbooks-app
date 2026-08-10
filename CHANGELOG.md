@@ -2,6 +2,21 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.20.3] — 2026-08-10
+
+修复 MCP server shutdown 崩溃(ZCode/Claude Code 切换会话不再崩 exe):
+
+问题: MCP client(ZCode/Claude Code 等)切换会话关闭 stdio 通道时, MCP SDK 1.28.1 的 anyio TaskGroup 抛 BaseExceptionGroup(SDK 只 catch ClosedResourceError 漏了其他类型), 异常冒泡到进程顶层导致 PyInstaller exe 崩溃显示 'failed to execute script _main_... unhandled errors in a TaskGroup', 且吞 traceback + 不写 crash log(用户黑盒)。这是 MCP SDK 已知 shutdown 噪音, 非业务 bug。
+
+三层防御修复:
+1. _stdio_shutdown.py helper: 严格判定 ExceptionGroup 所有叶子异常是否全是 stdio 关闭类才吸收, 混合异常 re-raise 防掩盖真实 bug
+2. cli.py::mcp + mcp_server.py::main 两入口包 run_mcp_server_safely()
+3. __main__.py 友好 excepthook 拆解 ExceptionGroup 子异常(兜底, 不再黑盒)
+
+测试 16 个(子进程断连 + hook 拆解 + helper 判定 9 场景 + 包装器行为)。
+regression.sh 双绿(2191 passed/2191 passed)。
+VERIFICATION §5 闭环(先写验收标准确认失败再改)。
+
 ## [0.20.2] — 2026-08-08
 
 修复 regression.sh 预先存在的 flag=on 失败(VERIFICATION.md §5/§7 合规):
