@@ -4,7 +4,7 @@ AI 驱动的中国小企业记账工具 —— **内置全功能 Web 记账界�
 
 > 📜 **本仓库为 lookatBooks 的发布渠道**,含**二进制下载** + **用户文档** + **Issue 跟踪**。源代码闭源,详见 [EULA.md](EULA.md)。
 >
-> 📥 **下载最新版**:见 [Releases](https://github.com/Kaiji-Z/lookatbooks-app/releases) — Windows `lookatbooks-setup.exe`(安装版)或 `lookatbooks.exe`(绿色版);macOS `lookatbooks-<version>-arm64.dmg`(Apple Silicon)。
+> 📥 **下载最新版**:见 [Releases](https://github.com/Kaiji-Z/lookatbooks-app/releases) — Windows `lookatbooks-setup.exe`(安装版)或 `lookatbooks-<version>-windows-portable.zip`(绿色版);macOS `lookatbooks-<version>-arm64.dmg`(Apple Silicon)。
 >
 > 🐛 **遇到 bug / 想要新功能**:[提 Issue](https://github.com/Kaiji-Z/lookatbooks-app/issues/new/choose)。
 
@@ -38,7 +38,7 @@ AI 驱动的中国小企业记账工具 —— **内置全功能 Web 记账界�
 从 [Latest Release](https://github.com/Kaiji-Z/lookatbooks-app/releases/latest) 下载:
 
 - **`lookatbooks-setup.exe`**(推荐):双击安装,自动创建桌面快捷方式 + 开始菜单。安装到 `C:\Program Files\lookatBooks\`。
-- **`lookatbooks.exe`**(绿色版):单文件,下载即可双击运行,无需安装。
+- **`lookatbooks-<version>-windows-portable.zip`**(绿色版):解压到任意目录,双击解压目录里的 `lookatbooks.exe`(或 `启动记账_打包版.bat`)即可运行,无需安装。v0.21.0 起为目录形态(exe 需与 `_internal\` 同目录),请保持解压后目录结构完整。
 
 ### macOS（Apple Silicon, M1-M4）
 
@@ -66,9 +66,9 @@ sudo xattr -cr /Applications/lookatbooks.app
 每个 Release 附带 `SHA256SUMS` 文件,含全部二进制的 sha256 指纹:
 
 ```bash
-# 下载 SHA256SUMS 与对应的 .exe/.dmg 后, 同目录运行:
+# 下载 SHA256SUMS 与对应的安装包(.exe/.zip/.dmg)后, 同目录运行:
 sha256sum -c SHA256SUMS    # Linux/macOS/Git Bash
-Get-FileHash lookatbooks.exe -Algorithm SHA256   # Windows PowerShell
+Get-FileHash lookatbooks-setup.exe -Algorithm SHA256   # Windows PowerShell
 ```
 
 ---

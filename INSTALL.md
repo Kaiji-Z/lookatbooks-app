@@ -10,7 +10,7 @@ lookatBooks 的**主接口是 MCP**（54 个结构化 tools），CLI / Web UI / 
 | **方式 B：Skill 工作流**（教 agent 怎么用 MCP） | 所有配了 MCP 的 agent | 通过 MCP 双通道自动分发(prompts + `get_skill_guide_tool`), 不复制文件 |
 | **方式 C：CLI**（辅助） | 人直接操作 / 写脚本 / debug / 不支持 MCP 的 agent | `lookatbooks <command>` |
 | **方式 D：Web UI** | 人直接操作（全流程可视化） | `lookatbooks ui <book>` |
-| **方式 E：PyInstaller exe** | 不会 pip 的普通用户 | 双击 `lookatbooks.exe` 即可, 102MB 含全部功能(PDF/OCR/Web/MCP) |
+| **方式 E：便携版 zip** | 不会 pip 的普通用户 | 解压 `lookatbooks-<version>-windows-portable.zip`, 双击 `lookatbooks.exe`(v0.21.0 起 onedir, 解压后 ~290MB 含全部功能 PDF/OCR/Web/MCP; v0.20.x 及之前为单 exe) |
 | **方式 F：Inno Setup 安装版** | 传统用户(推荐分发) | 安装到 Program Files, 桌面快捷方式, MCP 路径固定 |
 | **方式 G：macOS .dmg 桌面应用** | Mac 用户(Apple Silicon) | 拖到 Applications, 首次需 xattr 绕过 Gatekeeper |
 
@@ -71,9 +71,9 @@ bash install.sh
 }
 ```
 
-### 模式 2：拿了 PyInstaller exe / Inno Setup 安装版（普通用户）
+### 模式 2：拿了安装版 / 便携版 zip（普通用户）
 
-Inno Setup 安装版路径固定 `C:\Program Files\lookatBooks\lookatbooks.exe`（推荐——用户不会动 Program Files 里的文件）。绿色 onefile 版用 exe 实际所在路径。
+Inno Setup 安装版路径固定 `C:\Program Files\lookatBooks\lookatbooks.exe`（推荐——用户不会动 Program Files 里的文件）。便携版 zip 解压后用解压目录里 `lookatbooks.exe` 的实际路径(v0.21.0 起 onedir 目录形态, exe 与 `_internal\` 必须保持同目录)。
 
 **Claude Code / OpenCode**（项目根 `.mcp.json`）：
 ```json
@@ -187,22 +187,25 @@ rm .mcp.json                             # 删 MCP 配置(可选)
 
 ## 高级功能
 
-### PyInstaller exe 打包（普通用户零依赖）
+### PyInstaller 打包（普通用户零依赖）
 
 ```powershell
 # 1. 先装打包依赖
 pip install -e ".[build,pdf,ocr]"
 
-# 2. 打包 onefile(单 exe, 双击即用)
+# 2. 打包 onedir(v0.21.0 起, 整目录运行)
 pyinstaller lookatbooks.spec
 
 # 3. (可选)打包安装版(传统向导, 路径固定)
 #    需先装 Inno Setup: winget install JRSoftware.InnoSetup
 iscc lookatbooks.iss
+
+# 4. (可选)便携版 zip(CI 发版自动做, 本地手动)
+Compress-Archive -Path dist\lookatbooks\* -DestinationPath dist\lookatbooks-<版本>-windows-portable.zip
 ```
 
 产物:
-- `dist/lookatbooks.exe`(~102MB onefile, 含 PDF/OCR/Web/MCP/CLI 全功能)
+- `dist/lookatbooks/`(onedir 目录: `lookatbooks.exe` + `_internal\`, 解压后 ~290MB 含 PDF/OCR/Web/MCP/CLI 全功能。v0.21.0 弃用 onefile: 单 exe 每次启动解压 ~269MB 到 %TEMP%, MCP 常驻场景异常退出永久残留, 一周可累积数十 GB)
 - `dist/lookatbooks-setup.exe`(Inno Setup 安装版, 装到 Program Files)
 
 双击 exe 自动打开 Web UI。支持 CLI(`exe --help`) / MCP(`exe mcp`) / Web UI(默认) 三种模式。无需 Python/pip install。

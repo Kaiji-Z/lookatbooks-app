@@ -2,6 +2,18 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.21.0] — 2026-08-19
+
+修复 MCP 常驻场景 %TEMP% 残留堆积(GitHub Issue: 单机一周累积 299 份 × 269MB ≈ 70GB):
+
+【方案 A: 启动清扫】exe 启动时后台线程自动清扫陈旧 _MEI 解压残留(三重保护: _MEI 名 + skills/lookatbooks-shared 特征 + mtime>24h, 绝不误删其他应用/运行中进程)。旧版用户升级后首次启动即清掉历史残留。
+
+【方案 B: Windows 弃 onefile 切 onedir(根治)】不再每次启动解压 269MB 到 %TEMP%, 异常退出不再残留, 冷启动还快 2-4 秒。兼容性: 安装版路径不变(C:\Program Files\lookatBooks\lookatbooks.exe, MCP 配置零变化), sys.frozen/_MEIPASS 语义兼容代码零改动。
+
+⚠️ Breaking change(便携版用户): 便携形态从单 exe 变为 lookatbooks-<版本>-windows-portable.zip, 解压后双击目录内 lookatbooks.exe 或 启动记账_打包版.bat 运行, 请保持解压目录结构完整(exe 与 _internal\ 同目录)。安装版(setup.exe)无任何变化。
+
+验证: 本地构建实测 5 项(exe 启动/mcp 断连 exit 0/无新 _MEI/假残留被清扫/ISCC 过) + regression.sh 双绿(2200/2200) + 清扫测试 9 个。
+
 ## [0.20.3] — 2026-08-10
 
 修复 MCP server shutdown 崩溃(ZCode/Claude Code 切换会话不再崩 exe):
