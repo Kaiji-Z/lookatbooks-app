@@ -2,6 +2,21 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.22.0] — 2026-08-20
+
+识别管线修复 + 学习闭环接通(对抗性审查后 4 项):
+
+【账错修复】cross_match 合并付款路径漏设 paid_via=cash —— 现金日记账的合并付款(一笔现金精确付清多张发票)被记成贷 1002 银行存款, 货币资金明细账实不符(总额不变报表不暴露, 只有银行对账能发现)。与简单路径对齐补齐。
+
+【根因修复】CSV 编码探测顺序 utf-8 优先(原 gb18030 在前会静默误解 UTF-8 文件成乱码; 实测触面窄——表头特征词巧合救了, 但顺序必须结构性正确)。
+
+【反馈统计对称性】record_confirmation 接线(原来全仓零调用, 反馈只记 miss 不记 hit, 贝叶斯先验随使用单调偏低): 用户未修改直接 approve AI 凭证 = 确认记 hit; 修改过的不重复记。+ 修复 BayesianScorer 同一份 sidecar 反馈计两次(伪计数并入先验 + 又做独立似然项)。
+
+【Tier 0 学习闭环接通】用户纠正一次 → 同类交易(同对方+金额桶+方向)下次 bookkeep 自动沿用纠正科目。此前闭环从未接通(Tier 0 查询在生产零调用 + 指纹 key 写查不一致双重断裂)。修复: 指纹 key 统一 + apply_user_override 共享函数 + bookkeep_tool 接线。Tier 0 凭证 conf=0.98 仍为 DRAFT 草稿, 人审协议不越权(必须 approve 才登账)。
+
+测试: 4 个 commit 共 +31 个新测试(全部先写验收确认失败再修)。
+regression.sh 双绿(2217/2217) + check_doc_sync 通过。
+
 ## [0.21.0] — 2026-08-19
 
 修复 MCP 常驻场景 %TEMP% 残留堆积(GitHub Issue: 单机一周累积 299 份 × 269MB ≈ 70GB):
