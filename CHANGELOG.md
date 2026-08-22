@@ -2,6 +2,10 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.23.0] — 2026-08-22
+
+识别管线三批优化: 正确性加固(cross_match 日期窗口+对方门槛/编码UTF-8优先/现金探测防误判/PDF错误链) + 性能(OCR单例/xlsx加载4→2/cross_match金额索引) + 维护性重构(规则表驱动/alipay-wechat共享模块/金额清洗收敛/删TranslationService)
+
 ## [0.22.0] — 2026-08-20
 
 识别管线修复 + 学习闭环接通(对抗性审查后 4 项):
