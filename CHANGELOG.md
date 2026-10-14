@@ -2,6 +2,18 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 风格,
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [0.24.0] — 2026-10-14
+
+修复凭证创建路径丢弃交易日期(一律记录入日): 凭证日期=交易日期并钳制进目标期间(原始日期留痕 ai_meta.original_date); create/update_draft tool 暴露 voucher_date 参数; Web 表单日期透传; 期末结转/利润分配/折旧等系统凭证记期间末日
+
+## [未发布]
+
+修复"凭证创建路径丢弃交易日期"缺陷: bookkeep_tool / create_voucher_tool / import_llm_json_tool 生成的凭证一律记录入日(date.today), 交易日期明明已在 Transaction.date 里却被丢弃。
+
+统一规则(新增 `lookatbooks/dates.py`): 凭证日期 = 显式传入 > 交易日期 > today 兜底, 一律钳制进目标期间(早于期间→首日/晚于→末日); 钳制时原始日期留痕 `ai_meta.original_date`。用友/金蝶靠"日期决定期间+关账拒绝"保证凭证-期间一致, 本项目 period 与日期解耦(补记场景), 故在工具层钳制。期间归属(period 字段)不变。
+
+连带修齐同类断点: Web 表单日期透传(新建×2 路由原"解析即丢", 草稿编辑想改日期但 tool 未暴露参数) + `update_draft_voucher_tool` 暴露 voucher_date 参数 + 期末结转/年末利润分配凭证记期间末日(原 today, 10 月补结 9 月账会 dated 10-14) + 折旧/摊销/清理缺省日期 today 兜底并钳制(跨月进页自动补提不再落在期间外)。
+
 ## [0.23.0] — 2026-08-22
 
 识别管线三批优化: 正确性加固(cross_match 日期窗口+对方门槛/编码UTF-8优先/现金探测防误判/PDF错误链) + 性能(OCR单例/xlsx加载4→2/cross_match金额索引) + 维护性重构(规则表驱动/alipay-wechat共享模块/金额清洗收敛/删TranslationService)
